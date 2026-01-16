@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["attribute","io","kernel"],"struct":["OperatorDomain","ShapeInferenceContext"],"trait":["Operator"]};

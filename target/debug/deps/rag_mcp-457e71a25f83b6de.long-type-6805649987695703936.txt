@@ -1,2 +1,0 @@
-(Tool, for<'a> fn(&'a RagMcpServer, CollectionParams) -> Pin<Box<(dyn Future<Output = Result<rmcp::model::CallToolResult, ErrorData>> + Send + 'a)>> {RagMcpServer::rag_create_collection})
-(Tool, for<'a> fn(&'a RagMcpServer, CollectionParams) -> Pin<Box<(dyn Future<Output = Result<rmcp::model::CallToolResult, ErrorData>> + Send + 'a)>> {RagMcpServer::rag_create_collection}): IntoToolRoute<RagMcpServer, _>

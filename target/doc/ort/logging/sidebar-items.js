@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["LogLevel"],"fn":["default_log_level"],"struct":["Logger"],"type":["LoggerFunction"]};

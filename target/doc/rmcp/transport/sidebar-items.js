@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["TransportAdapterIdentity"],"mod":["async_rw","common","sink_stream"],"struct":["DynamicTransportError","OneshotTransport"],"trait":["IntoTransport","Transport"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["TensorElementType"],"struct":["Shape","SymbolicDimensions"],"trait":["ArrayExtensions","IntoTensorElementType","PrimitiveTensorElementType","Utf8Data"]};
