@@ -1,0 +1,15 @@
+[package]
+name = "rag-chunk"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description = "Chunking strategies for rag-mcp"
+
+[dependencies]
+rag-core = { path = "../rag-core" }
+tracing = { workspace = true }
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }

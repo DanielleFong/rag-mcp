@@ -1,0 +1,2 @@
+(Tool, for<'a> fn(&'a RagMcpServer, SearchParams) -> Pin<Box<(dyn Future<Output = Result<rmcp::model::CallToolResult, ErrorData>> + Send + 'a)>> {RagMcpServer::rag_search})
+(Tool, for<'a> fn(&'a RagMcpServer, SearchParams) -> Pin<Box<(dyn Future<Output = Result<rmcp::model::CallToolResult, ErrorData>> + Send + 'a)>> {RagMcpServer::rag_search}): IntoToolRoute<RagMcpServer, _>

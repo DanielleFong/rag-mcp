@@ -1,0 +1,65 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Enables binding of session inputs and/or outputs to pre-allocated memory."><title>ort::io_binding - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-ca0dd0c4.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="ort" data-themes="" data-resource-suffix="" data-rustdoc-version="1.92.0 (ded5c06cf 2025-12-08)" data-channel="1.92.0" data-search-js="search-d69d8955.js" data-stringdex-js="stringdex-c3e638e9.js" data-settings-js="settings-c38705f0.js" ><script src="../../static.files/storage-e2aeef58.js"></script><script defer src="../sidebar-items.js"></script><script defer src="../../static.files/main-ce535bd0.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">Module io_binding</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><a class="logo-container" href="../../ort/index.html"><img src="https://ort.pyke.io/assets/icon.png" alt="logo"></a><h2><a href="../../ort/index.html">ort</a><span class="version">2.0.0-rc.11</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">Module io_<wbr>binding</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#example" title="Example">Example</a></li></ul><h3><a href="#structs">Module Items</a></h3><ul class="block"><li><a href="#structs" title="Structs">Structs</a></li></ul></section><div id="rustdoc-modnav"><h2 class="in-crate"><a href="../index.html">In crate ort</a></h2></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="../index.html">ort</a></div><h1>Module <span>io_<wbr>binding</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../src/ort/io_binding.rs.html#1-355">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Enables binding of session inputs and/or outputs to pre-allocated memory.</p>
+<p><a href="struct.IoBinding.html" title="struct ort::io_binding::IoBinding"><code>IoBinding</code></a> minimizes copies between a device (like a GPU) and the host (CPU) by allowing you to bind a
+certain input/output to a pre-allocated value on a specific device.</p>
+<p><a href="struct.IoBinding.html" title="struct ort::io_binding::IoBinding"><code>IoBinding</code></a> is most suitable for:</p>
+<ul>
+<li>An ensemble of models in which the output from one model is the input to another and does not need to pass through
+the CPU to perform additional processing.</li>
+<li>Situations where an output should stay on a device (e.g. to perform additional hardware-accelerated processing).</li>
+<li>Models that accept an input that does not change for multiple subsequent runs (like the conditional embedding for
+a diffusion model).</li>
+</ul>
+<p><a href="struct.IoBinding.html" title="struct ort::io_binding::IoBinding"><code>IoBinding</code></a> will not provide any meaningful benefit for:</p>
+<ul>
+<li>Models where every input changes with each invocation, such as a causal language model or object recognition
+model.</li>
+<li>Pipelines that go straight from CPU -&gt; GPU -&gt; CPU.</li>
+</ul>
+<h2 id="example"><a class="doc-anchor" href="#example">§</a>Example</h2>
+<p>A diffusion model which takes a text condition input.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span><span class="kw-2">mut </span>text_encoder = Session::builder()<span class="question-mark">?
+	</span>.with_execution_providers([ep::CUDA::default().build()])<span class="question-mark">?
+	</span>.commit_from_file(<span class="string">"text_encoder.onnx"</span>)<span class="question-mark">?</span>;
+<span class="kw">let </span><span class="kw-2">mut </span>unet = Session::builder()<span class="question-mark">?
+	</span>.with_execution_providers([ep::CUDA::default().build()])<span class="question-mark">?
+	</span>.commit_from_file(<span class="string">"unet.onnx"</span>)<span class="question-mark">?</span>;
+
+<span class="kw">let </span>text_condition = text_encoder
+	.run(<span class="macro">ort::inputs!</span>[Tensor::&lt;i64&gt;::from_array((
+		<span class="macro">vec!</span>[<span class="number">27</span>],
+		<span class="macro">vec!</span>[
+			<span class="number">23763</span>, <span class="number">15460</span>, <span class="number">473</span>, <span class="number">68</span>, <span class="number">312</span>, <span class="number">265</span>, <span class="number">17463</span>, <span class="number">4098</span>, <span class="number">304</span>, <span class="number">1077</span>, <span class="number">283</span>, <span class="number">198</span>, <span class="number">7676</span>, <span class="number">5976</span>, <span class="number">272</span>, <span class="number">285</span>, <span class="number">3609</span>, <span class="number">435</span>,
+			<span class="number">21680</span>, <span class="number">321</span>, <span class="number">265</span>, <span class="number">300</span>, <span class="number">1689</span>, <span class="number">64</span>, <span class="number">285</span>, <span class="number">4763</span>, <span class="number">64
+		</span>]
+	))<span class="question-mark">?</span>])<span class="question-mark">?
+	</span>.remove(<span class="string">"output0"</span>)
+	.unwrap();
+
+<span class="kw">let </span>input_allocator = Allocator::new(
+	<span class="kw-2">&amp;</span>unet,
+	MemoryInfo::new(AllocationDevice::CUDA_PINNED, <span class="number">0</span>, AllocatorType::Device, MemoryType::CPUInput)<span class="question-mark">?
+</span>)<span class="question-mark">?</span>;
+<span class="kw">let </span><span class="kw-2">mut </span>latents = Tensor::&lt;f32&gt;::new(<span class="kw-2">&amp;</span>input_allocator, [<span class="number">1_usize</span>, <span class="number">4</span>, <span class="number">64</span>, <span class="number">64</span>])<span class="question-mark">?</span>;
+
+<span class="kw">let </span><span class="kw-2">mut </span>io_binding = unet.create_binding()<span class="question-mark">?</span>;
+io_binding.bind_input(<span class="string">"condition"</span>, <span class="kw-2">&amp;</span>text_condition)<span class="question-mark">?</span>;
+
+<span class="kw">let </span>output_allocator = Allocator::new(
+	<span class="kw-2">&amp;</span>unet,
+	MemoryInfo::new(AllocationDevice::CUDA_PINNED, <span class="number">0</span>, AllocatorType::Device, MemoryType::CPUOutput)<span class="question-mark">?
+</span>)<span class="question-mark">?</span>;
+io_binding.bind_output(<span class="string">"noise_pred"</span>, Tensor::&lt;f32&gt;::new(<span class="kw-2">&amp;</span>output_allocator, [<span class="number">1_usize</span>, <span class="number">4</span>, <span class="number">64</span>, <span class="number">64</span>])<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+
+<span class="kw">for _ in </span><span class="number">0</span>..<span class="number">20 </span>{
+	io_binding.bind_input(<span class="string">"latents"</span>, <span class="kw-2">&amp;</span>latents)<span class="question-mark">?</span>;
+	<span class="kw">let </span>noise_pred = unet.run_binding(<span class="kw-2">&amp;</span>io_binding)<span class="question-mark">?</span>.remove(<span class="string">"noise_pred"</span>).unwrap();
+
+	<span class="kw">let </span><span class="kw-2">mut </span>latents = latents.extract_array_mut();
+	latents += <span class="kw-2">&amp;</span>noise_pred.try_extract_array::&lt;f32&gt;()<span class="question-mark">?</span>;
+}</code></pre></div>
+<p><a href="struct.IoBinding.html" title="struct ort::io_binding::IoBinding"><code>IoBinding</code></a> may provide a decent speedup in this example since the <code>condition</code> tensor is unchanging between runs.
+If we were to use normal session inference, the <code>condition</code> tensor would be needlessly copied with each invocation
+of <code>unet.run()</code>, and this copying can come with significant latency &amp; overhead. With <a href="struct.IoBinding.html" title="struct ort::io_binding::IoBinding"><code>IoBinding</code></a>, the <code>condition</code>
+tensor is only copied to the device once instead of 20 times.</p>
+</div></details><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.IoBinding.html" title="struct ort::io_binding::IoBinding">IoBinding</a></dt><dd>Enables binding of session inputs and/or outputs to pre-allocated memory.</dd></dl></section></div></main></body></html>

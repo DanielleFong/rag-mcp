@@ -1,0 +1,21 @@
+[package]
+name = "rag-embed"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description = "ONNX embedding model wrapper for rag-mcp"
+
+[dependencies]
+rag-core = { path = "../rag-core" }
+ort = { workspace = true }
+tokenizers = { workspace = true }
+ndarray = { workspace = true }
+async-trait = { workspace = true }
+tracing = { workspace = true }
+tokio = { workspace = true }
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
+tempfile = { workspace = true }

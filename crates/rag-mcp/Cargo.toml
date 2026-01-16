@@ -1,0 +1,23 @@
+[package]
+name = "rag-mcp"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description = "MCP server for rag-mcp"
+
+[dependencies]
+rag-core = { path = "../rag-core" }
+rag-store = { path = "../rag-store" }
+rag-embed = { path = "../rag-embed" }
+rag-chunk = { path = "../rag-chunk" }
+rag-query = { path = "../rag-query" }
+tokio = { workspace = true }
+tracing = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+async-trait = { workspace = true }
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }

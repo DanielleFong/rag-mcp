@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["Attribute"],"trait":["FromKernelAttributes","FromOpAttr","ToAttribute"]};

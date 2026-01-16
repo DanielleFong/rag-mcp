@@ -1,0 +1,68 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/rag-core",
+    "crates/rag-store",
+    "crates/rag-embed",
+    "crates/rag-chunk",
+    "crates/rag-query",
+    "crates/rag-sync",
+    "crates/rag-mcp",
+    "crates/rag-cli",
+    "crates/rag-tui",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["mattparlmer"]
+license = "MIT"
+rust-version = "1.75"
+
+[workspace.dependencies]
+# Core
+ulid = { version = "1.1", features = ["serde"] }
+blake3 = "1.5"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "1.0"
+async-trait = "0.1"
+tokio = { version = "1", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Storage
+rusqlite = { version = "0.31", features = ["bundled", "vtab", "functions", "load_extension"] }
+sqlite-vec = "0.1"
+
+# Embedding
+ort = "2.0.0-rc.11"
+tokenizers = "0.19"
+ndarray = "0.17"
+
+# Chunking
+tree-sitter = "0.22"
+tree-sitter-rust = "0.21"
+tree-sitter-python = "0.21"
+tree-sitter-typescript = "0.21"
+tree-sitter-javascript = "0.21"
+tree-sitter-go = "0.21"
+pulldown-cmark = "0.10"
+
+# MCP
+rmcp = { version = "0.13", features = ["server"] }
+
+# CLI
+clap = { version = "4.5", features = ["derive"] }
+
+# TUI
+ratatui = "0.26"
+crossterm = "0.27"
+
+# Testing
+tempfile = "3.10"
+
+# Utilities
+hex = "0.4"
+dirs = "5.0"
+toml = "0.8"
